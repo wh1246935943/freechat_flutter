@@ -21,13 +21,14 @@ class _IndexState extends State<Index> with TickerProviderStateMixin {
     NavigationIconView(icon: const Icon(Icons.auto_awesome_sharp), title: '发现', vsync: this),
     NavigationIconView(icon: const Icon(Icons.account_circle), title: '我的', vsync: this),
   ];
-
-  List<StatefulWidget> pageList = <StatefulWidget>[
-    const Chat(),
-    const Contacts(),
-    const Find(),
-    const My(),
+  final List<Widget> pageList = const <Widget>[
+    Chat( key: PageStorageKey<String>('Chat') ),
+    Contacts( key: PageStorageKey<String>('Contacts') ),
+    Find( key: PageStorageKey<String>('Find') ),
+    My( key: PageStorageKey<String>('My') )
   ];
+
+  final PageStorageBucket _bucket = PageStorageBucket();
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +52,9 @@ class _IndexState extends State<Index> with TickerProviderStateMixin {
 
     return MaterialApp(
       home: Scaffold(
-        body: Center(
-          child: pageList.elementAt(currentIndex),
+        body: PageStorage(
+          bucket: _bucket,
+          child: pageList[currentIndex],
         ),
         bottomNavigationBar: bottomNavigationBar,
       ),
