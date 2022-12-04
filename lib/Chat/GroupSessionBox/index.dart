@@ -21,7 +21,7 @@ class _GroupSessionBoxState extends State<GroupSessionBox> {
         centerTitle: true,
         title: Text(name!)
       ),
-      body: const Text('这里展示群聊天的内容')
+      body: Text('这$name页面')
     );
   }
 }
