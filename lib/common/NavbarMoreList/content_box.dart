@@ -41,7 +41,7 @@ class ContentBox extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: list.map<Widget>((e) => InkWell(
             child: Container(
-              height: 40,
+              height: 50,
               alignment: Alignment.center,
               child: Text(
                 e,
