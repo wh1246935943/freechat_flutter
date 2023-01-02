@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 // import 'package:path/path.dart';
 // import 'package:sqflite/sqflite.dart';
 import 'package:freechat/Index/index.dart';
+import 'package:freechat/common/Request/index.dart';
 
-import '../Store/IndexStore.dart';
+// import '../Store/IndexStore.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -12,17 +13,50 @@ class Login extends StatefulWidget {
   State<StatefulWidget> createState() => _LoginState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginState extends State<Login> with TickerProviderStateMixin {
   final GlobalKey _formKey = GlobalKey<FormState>();
-  late String _email, _password;
+  late String _userName, _password;
+  late AnimationController controller;
   bool _isObscure = true;
+  bool _loading = false;
   Color _eyeColor = Colors.grey;
 
-  void loginHandel(context) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute<void>(builder: (context) => const Index())
-    );
+  @override
+  void initState() {
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 10),
+    )..addListener(() {
+        setState(() {});
+      });
+    controller.repeat(reverse: true);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  void loginHandel(context) async {
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      var resp = await Request.post('/auth/login', params: {'userName': _userName, 'password': _password});
+      print(resp);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute<void>(builder: (context) => const Index())
+      );
+    } catch (e) {
+      // e
+    }
+    setState(() {
+      _loading = false;
+    });
   }
 
 
@@ -35,21 +69,30 @@ class _LoginState extends State<Login> {
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           children: [
-            const SizedBox(height: kToolbarHeight), // 距离顶部一个工具栏的高度
-            buildTitle(), // Login
-            buildTitleLine(), // Login下面的下划线
+            // 距离顶部一个工具栏的高度
+            const SizedBox(height: kToolbarHeight),
+            // Login
+            buildTitle(),
+            // Login下面的下划线
+            buildTitleLine(),
             const SizedBox(height: 60),
-            buildEmailTextField(), // 输入邮箱
+            // 输入邮箱
+            buildEmailTextField(),
             const SizedBox(height: 30),
-            buildPasswordTextField(context), // 输入密码
-            buildForgetPasswordText(context), // 忘记密码
+            // 输入密码
+            buildPasswordTextField(context),
+            // 忘记密码
+            buildForgetPasswordText(context),
             const SizedBox(height: 60),
-            buildLoginButton(context), // 登录按钮
+            // 登录按钮
+            buildLoginButton(context),
             const SizedBox(height: 40),
-            buildRegisterText(context), // 注册
-          ],
-        ),
-      ),
+            // 注册账号文本按钮
+            buildRegisterText(context),
+            // 加载动画
+          ]
+        )
+      )
     );
   }
 
@@ -83,14 +126,20 @@ class _LoginState extends State<Login> {
               // 设置圆角
               shape: MaterialStateProperty.all(const StadiumBorder(
                   side: BorderSide(style: BorderStyle.none)))),
-          child: Text('登录',
+          child: _loading ? const Center(child: SizedBox(
+              width: 30.0,
+              height: 30.0,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Color.fromARGB(255, 255, 255, 255),
+              )
+            )) : Text('登录',
               style: Theme.of(context).primaryTextTheme.headline5),
           onPressed: () {
             // 表单校验通过才会继续执行
             if ((_formKey.currentState as FormState).validate()) {
               (_formKey.currentState as FormState).save();
-              //TODO 执行登录方法
-              print('email: $_email, password: $_password');
+              print('userName: $_userName, password: $_password');
               loginHandel(context);
             }
           },
@@ -154,7 +203,7 @@ class _LoginState extends State<Login> {
           return '请输入正确的免聊账号';
         }
       },
-      onSaved: (v) => _email = v!,
+      onSaved: (v) => _userName = v!,
     );
   }
 
