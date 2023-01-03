@@ -19,6 +19,8 @@ dependencies:
   fluro: ^2.0.4
   dio: ^4.0.6
   json_annotation: ^4.7.0
+  fluttertoast: ^8.1.2
+  another_flushbar: ^1.12.29
 
 dev_dependencies:
   flutter_test:

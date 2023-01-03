@@ -1,8 +1,11 @@
+import 'package:dio/src/response.dart';
 import 'package:flutter/material.dart';
 // import 'package:path/path.dart';
 // import 'package:sqflite/sqflite.dart';
 import 'package:freechat/Index/index.dart';
 import 'package:freechat/common/Request/index.dart';
+import 'dart:convert';
+import 'package:fluttertoast/fluttertoast.dart';
 
 // import '../Store/IndexStore.dart';
 
@@ -40,23 +43,36 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   }
 
   void loginHandel(context) async {
-    setState(() {
-      _loading = true;
-    });
-
+    setState(() => _loading = true);
+    String message = '';
+    int code = -1; 
     try {
-      var resp = await Request.post('/auth/login', params: {'userName': _userName, 'password': _password});
-      print(resp);
+      var respJson = await httpRequest(
+        '/auth/login',
+        {'userName': _userName, 'password': _password},
+        method: 'POST'
+      );
+      // 解析接口返回的数据
+      Map<String, dynamic> resp = await jsonDecode(respJson.toString());
+      message = resp['message'];
+      code = resp['code'];
+    } catch (e) {};
+    // 成功与否都关闭loading
+    setState(() => _loading = false);
+    // 返回状态为200时登录成功
+    if (code == 200) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute<void>(builder: (context) => const Index())
       );
-    } catch (e) {
-      // e
+      return;
     }
-    setState(() {
-      _loading = false;
-    });
+    // 登录失败，弹出错误提示
+    Fluttertoast.showToast(
+      msg: "$code: $message",
+      gravity: ToastGravity.BOTTOM ,
+      backgroundColor: Colors.red
+    );
   }
 
 
