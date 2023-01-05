@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:freechat/Auth/login.dart';
+import 'package:freechat/pages/Auth/login.dart';
 
 class My extends StatefulWidget {
   const My({super.key});

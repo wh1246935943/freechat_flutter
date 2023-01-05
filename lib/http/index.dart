@@ -2,8 +2,8 @@ import 'package:dio/dio.dart';
 
 var options = BaseOptions(
   baseUrl: 'http://freechat.bilinstore.com/doudou',
-  connectTimeout: 5000,
-  receiveTimeout: 3000,
+  connectTimeout: 10000,
+  receiveTimeout: 10000
 );
 Dio dio = Dio(options);
 

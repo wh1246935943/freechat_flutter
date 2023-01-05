@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:freechat/common/NavbarMoreList/content_box.dart';
+import 'content_box.dart';
 
 class NavbarMoreList<T> extends PopupRoute<T> {
   @override

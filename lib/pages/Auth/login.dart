@@ -2,8 +2,8 @@ import 'package:dio/src/response.dart';
 import 'package:flutter/material.dart';
 // import 'package:path/path.dart';
 // import 'package:sqflite/sqflite.dart';
-import 'package:freechat/Index/index.dart';
-import 'package:freechat/common/Request/index.dart';
+import 'package:freechat/pages/Index/index.dart';
+import 'package:freechat/http/index.dart';
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
 

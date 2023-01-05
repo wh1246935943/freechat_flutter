@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:freechat/Chat/SessionBox/index.dart';
-import 'package:freechat/common/NavbarMoreList/index.dart';
+import 'package:freechat/pages/Chat/SessionBox/index.dart';
+import 'package:freechat/pages/common/NavbarMoreList/index.dart';
 
 class Chat extends StatefulWidget {
   const Chat({super.key});

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:freechat/Chat/index.dart';
-import 'package:freechat/My/index.dart';
-import 'package:freechat/Find/index.dart';
-import 'package:freechat/Contacts/index.dart';
+import 'package:freechat/pages/Chat/index.dart';
+import 'package:freechat/pages/My/index.dart';
+import 'package:freechat/pages/Find/index.dart';
+import 'package:freechat/pages/Contacts/index.dart';
 import 'navigation_icon_view.dart';
 
 class Index extends StatefulWidget {

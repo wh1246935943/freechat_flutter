@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:freechat/Chat/GroupSessionBox/index.dart';
+import 'package:freechat/pages/Chat/GroupSessionBox/index.dart';
 
 class ContentBox extends StatelessWidget {
 

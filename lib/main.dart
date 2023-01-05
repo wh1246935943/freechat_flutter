@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:freechat/Index/index.dart';
-import 'package:freechat/Auth/login.dart';
+import 'package:freechat/pages/Index/index.dart';
+import 'package:freechat/pages/Auth/login.dart';
 
 import 'package:provider/provider.dart';
 import 'package:freechat/Store/IndexStore.dart';
