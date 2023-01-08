@@ -21,6 +21,7 @@ dependencies:
   json_annotation: ^4.7.0
   fluttertoast: ^8.1.2
   another_flushbar: ^1.12.29
+  dio_cookie_manager: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -31,3 +32,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - lib/assets/

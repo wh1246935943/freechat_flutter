@@ -25,7 +25,7 @@ class App extends StatelessWidget {
 
     return MaterialApp(
       home: Scaffold(
-        body: isLogin ? const Index() : const Login()
+        body: isLogin ? const Index() : const Index()
       ),
       theme: ThemeData(
         primarySwatch: Colors.green, // 设置主题颜色

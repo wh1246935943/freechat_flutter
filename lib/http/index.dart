@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+// import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+// import 'package:cookie_jar/cookie_jar.dart';
 
 var options = BaseOptions(
   baseUrl: 'http://freechat.bilinstore.com/doudou',
@@ -6,6 +8,8 @@ var options = BaseOptions(
   receiveTimeout: 10000
 );
 Dio dio = Dio(options);
+// CookieJar cookieJar= CookieJar();
+// dio.interceptors.add(CookieManager(cookieJar));
 
 Future<Response> httpRequest(url, params, {String method = 'GET'}) async {
   Response response = await dio.request(
