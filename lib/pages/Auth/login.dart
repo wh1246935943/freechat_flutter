@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:freechat/pages/Index/index.dart';
 import 'package:freechat/http/index.dart';
 import 'dart:convert';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:freechat/utils/dd_toast.dart';
 
 // import '../Store/IndexStore.dart';
 
@@ -68,11 +68,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
       return;
     }
     // 登录失败，弹出错误提示
-    Fluttertoast.showToast(
-      msg: "$code: $message",
-      gravity: ToastGravity.BOTTOM ,
-      backgroundColor: Colors.red
-    );
+    DDToast.error("$code: $message");
   }
 
 

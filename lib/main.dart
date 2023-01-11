@@ -25,7 +25,7 @@ class App extends StatelessWidget {
 
     return MaterialApp(
       home: Scaffold(
-        body: isLogin ? const Index() : const Login()
+        body: isLogin ? const Index() : const Index()
       ),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
