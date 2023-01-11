@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:dio/src/response.dart';
 import 'package:flutter/material.dart';
 // import 'package:path/path.dart';
@@ -6,6 +7,7 @@ import 'package:freechat/pages/Index/index.dart';
 import 'package:freechat/http/index.dart';
 import 'dart:convert';
 import 'package:freechat/utils/dd_toast.dart';
+import 'package:freechat/vo/LoginVo.dart';
 
 // import '../Store/IndexStore.dart';
 
@@ -23,6 +25,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   bool _isObscure = true;
   bool _loading = false;
   Color _eyeColor = Colors.grey;
+  LoginVo _loginVo = LoginVo(code: -1, message: '', data: Data(id: -1, token: ''));
 
   @override
   void initState() {
@@ -53,20 +56,30 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
         method: 'POST'
       );
       // 解析接口返回的数据
-      Map<String, dynamic> resp = await jsonDecode(respJson.toString());
-      message = resp['message'];
-      code = resp['code'];
+      // Map<String, dynamic> resp = await jsonDecode(respJson.toString());
+      // message = resp['message'];
+      // code = resp['code'];
+
+      // String responseBody = await respJson.data.transform(utf8.decoder).join();
+      // var jsonDecode = json.decode(responseBody);
+
+      // var resp = await jsonDecode(respJson.toString());
+
+      var data= await jsonDecode(respJson.toString());
+      _loginVo = LoginVo.fromJson(data);
+
+      
     } catch (e) {};
     // 成功与否都关闭loading
     setState(() => _loading = false);
     // 返回状态为200时登录成功
-    if (code == 200) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute<void>(builder: (context) => const Index())
-      );
-      return;
-    }
+    // if (code == 200) {
+    //   Navigator.pushReplacement(
+    //     context,
+    //     MaterialPageRoute<void>(builder: (context) => const Index())
+    //   );
+    //   return;
+    // }
     // 登录失败，弹出错误提示
     DDToast.error("$code: $message");
   }
@@ -117,7 +130,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
           children: [
             const Text('没有账号?'),
             GestureDetector(
-              child: const Text('点击注册', style: TextStyle(color: Colors.green)),
+              child: Text(_loginVo.message, style: const TextStyle(color: Colors.green)),
               onTap: () {
                 // loginHandel(context);
               },

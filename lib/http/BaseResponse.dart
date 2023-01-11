@@ -1,19 +1,29 @@
-import 'package:json_annotation/json_annotation.dart';
+// import 'package:json_annotation/json_annotation.dart';
 
-part 'base_response.g.dart';
+// part 'BaseResponse.g.dart';
 
-@JsonSerializable()
-class BaseResponse {
-  // 后台返回的错误码
-  int code;
+// @JsonSerializable()
+// class BaseResponse {
+//   // 后台返回的错误码
+//   late int code;
+//   // 返回的信息
+//   late String message;
+//   // 返回的数据
+//   late Object data;
 
-  // 返回的信息
-  String message;
+//   BaseResponse(this.code, this.message, this.data);
 
-  BaseResponse(this.code, this.message);
+//   BaseResponse.fromJson(Map<String, dynamic> json) {
+//     BaseResponse(
+//       code = json['code'],
+//       message = json['message'],
+//       data = json['data'],
+//     );
+//   }
 
-  factory BaseResponse.fromJson(Map<String, dynamic> json) =>
-      _$BaseResponseFromJson(json);
-
-  Map<String, dynamic> toJson() => _$BaseResponseToJson(this);
-}
+//   Map<String, dynamic> toJson() => {
+//         "code": code,
+//         "message": message,
+//         "data": data,
+//       };
+// }

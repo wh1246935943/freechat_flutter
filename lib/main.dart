@@ -19,7 +19,7 @@ class App extends StatelessWidget {
     bool isLogin = Provider.of<IndexStore>(context).loginState;
 
     return MaterialApp(
-        home: Scaffold(body: isLogin ? const Index() : const Index()),
+        home: Scaffold(body: isLogin ? const Index() : const Login()),
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.green, // 设置主题颜色
