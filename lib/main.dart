@@ -27,6 +27,7 @@ class App extends StatelessWidget {
       home: Scaffold(
         body: isLogin ? const Index() : const Login()
       ),
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.green, // 设置主题颜色
       )

@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
 var options = BaseOptions(
-  baseUrl: 'http://freechat.bilinstore.com/doudou',
+  baseUrl: 'http://43.136.217.59:9001/doudou',
   connectTimeout: 10000,
   receiveTimeout: 10000
 );
