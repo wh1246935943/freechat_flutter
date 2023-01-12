@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 // import 'package:sqflite/sqflite.dart';
 import 'package:freechat/pages/Index/index.dart';
 import 'package:freechat/http/index.dart';
-import 'dart:convert';
-import 'package:freechat/utils/dd_toast.dart';
-import 'package:freechat/vo/LoginVo.dart';
+import 'package:freechat/vo/login_vo.dart';
+
+import '../../utils/sp_cache.dart';
 
 // import '../Store/IndexStore.dart';
 
@@ -25,17 +25,20 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   bool _isObscure = true;
   bool _loading = false;
   Color _eyeColor = Colors.grey;
-  late LoginVo _loginVo;
+  LoginVo _loginVo = LoginVo();
 
   @override
-  void initState() {
+  void initState() async {
     controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 10),
     )..addListener(() {
-        setState(() {});
-      });
+      setState(() {});
+    });
     controller.repeat(reverse: true);
+
+    // _userName = (await SpCache.getString('cache_token'))!;
+
     super.initState();
   }
 
@@ -46,30 +49,31 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   }
 
   void loginHandel(context) async {
+    _loginVo = LoginVo();
     setState(() => _loading = true);
-    String message = '';
-    int code = -1;
     try {
       var respJson = await httpRequest(
         '/auth/login', {'userName': _userName, 'password': _password},
         method: 'POST'
       );
 
-      var data = await jsonDecode(respJson.toString());
-      _loginVo = LoginVo.fromJson(data);
+      // var data = await jsonDecode(respJson.toString());
+      _loginVo.token = respJson.data['token'];// LoginVo.fromJson(respJson);
+      _loginVo.id = respJson.data['id'];
     } catch (e) {};
     // 成功与否都关闭loading
     setState(() => _loading = false);
-    // 返回状态为200时登录成功
-    // if (code == 200) {
-    //   Navigator.pushReplacement(
-    //     context,
-    //     MaterialPageRoute<void>(builder: (context) => const Index())
-    //   );
-    //   return;
-    // }
-    // 登录失败，弹出错误提示
-    DDToast.error("$code: $message");
+    
+    // 用户信息获取成功进入系统
+    if (_loginVo.token != null) {
+      await SpCache.save('cache_userName', _userName);
+      await SpCache.save('cache_userId', _loginVo.id);
+      await SpCache.save('cache_token', _loginVo.token);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute<void>(builder: (context) => const Index())
+      );
+    }
   }
 
   @override
@@ -98,6 +102,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
             const SizedBox(height: 60),
             // 登录按钮
             buildLoginButton(context),
+            Text(_loginVo.token ?? ''),
             const SizedBox(height: 40),
             // 注册账号文本按钮
             buildRegisterText(context),
@@ -117,9 +122,9 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
           children: [
             const Text('没有账号?'),
             GestureDetector(
-              child: Text(
-                _loginVo.data.token,
-                style: const TextStyle(color: Colors.green)
+              child: const Text(
+                '注册账号',
+                style: TextStyle(color: Colors.green)
               ),
               onTap: () {
                 // loginHandel(context);
@@ -155,7 +160,6 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
             // 表单校验通过才会继续执行
             if ((_formKey.currentState as FormState).validate()) {
               (_formKey.currentState as FormState).save();
-              print('userName: $_userName, password: $_password');
               loginHandel(context);
             }
           },
@@ -213,6 +217,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
   Widget buildEmailTextField() {
     return TextFormField(
+      initialValue: _userName,
       decoration: const InputDecoration(labelText: '账号'),
       validator: (v) {
         var emailReg = RegExp(r"^[a-zA-Z0-9_-]{6,20}$");
