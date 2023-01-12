@@ -25,7 +25,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   bool _isObscure = true;
   bool _loading = false;
   Color _eyeColor = Colors.grey;
-  LoginVo _loginVo = LoginVo(code: -1, message: '', data: Data(id: -1, token: ''));
+  late LoginVo _loginVo;
 
   @override
   void initState() {
@@ -48,27 +48,15 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
   void loginHandel(context) async {
     setState(() => _loading = true);
     String message = '';
-    int code = -1; 
+    int code = -1;
     try {
       var respJson = await httpRequest(
-        '/auth/login',
-        {'userName': _userName, 'password': _password},
+        '/auth/login', {'userName': _userName, 'password': _password},
         method: 'POST'
       );
-      // 解析接口返回的数据
-      // Map<String, dynamic> resp = await jsonDecode(respJson.toString());
-      // message = resp['message'];
-      // code = resp['code'];
 
-      // String responseBody = await respJson.data.transform(utf8.decoder).join();
-      // var jsonDecode = json.decode(responseBody);
-
-      // var resp = await jsonDecode(respJson.toString());
-
-      var data= await jsonDecode(respJson.toString());
+      var data = await jsonDecode(respJson.toString());
       _loginVo = LoginVo.fromJson(data);
-
-      
     } catch (e) {};
     // 成功与否都关闭loading
     setState(() => _loading = false);
@@ -83,7 +71,6 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     // 登录失败，弹出错误提示
     DDToast.error("$code: $message");
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +117,10 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
           children: [
             const Text('没有账号?'),
             GestureDetector(
-              child: Text(_loginVo.message, style: const TextStyle(color: Colors.green)),
+              child: Text(
+                _loginVo.data.token,
+                style: const TextStyle(color: Colors.green)
+              ),
               onTap: () {
                 // loginHandel(context);
               },
@@ -148,18 +138,19 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
         width: 270,
         child: ElevatedButton(
           style: ButtonStyle(
-              // 设置圆角
-              shape: MaterialStateProperty.all(const StadiumBorder(
-                  side: BorderSide(style: BorderStyle.none)))),
+            // 设置圆角
+            shape: MaterialStateProperty.all(
+              const StadiumBorder(side: BorderSide(style: BorderStyle.none))
+            )
+          ),
           child: _loading ? const Center(child: SizedBox(
-              width: 30.0,
-              height: 30.0,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: Color.fromARGB(255, 255, 255, 255),
-              )
-            )) : Text('登录',
-              style: Theme.of(context).primaryTextTheme.headline5),
+            width: 30.0,
+            height: 30.0,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              color: Color.fromARGB(255, 255, 255, 255),
+            )
+          )) : Text('登录', style: Theme.of(context).primaryTextTheme.headline5),
           onPressed: () {
             // 表单校验通过才会继续执行
             if ((_formKey.currentState as FormState).validate()) {
@@ -192,38 +183,39 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
   Widget buildPasswordTextField(BuildContext context) {
     return TextFormField(
-        obscureText: _isObscure, // 是否显示文字
-        onSaved: (v) => _password = v!,
-        validator: (v) {
-          if (v!.isEmpty) {
-            return '请输入密码';
-          }
-        },
-        decoration: InputDecoration(
-            labelText: "密码",
-            suffixIcon: IconButton(
-              icon: Icon(
-                Icons.remove_red_eye,
-                color: _eyeColor,
-              ),
-              onPressed: () {
-                // 修改 state 内部变量, 且需要界面内容更新, 需要使用 setState()
-                setState(() {
-                  _isObscure = !_isObscure;
-                  _eyeColor = (_isObscure
-                      ? Colors.grey
-                      : Theme.of(context).iconTheme.color)!;
-                });
-              },
-            )));
+      obscureText: _isObscure, // 是否显示文字
+      onSaved: (v) => _password = v!,
+      validator: (v) {
+        if (v!.isEmpty) {
+          return '请输入密码';
+        }
+      },
+      decoration: InputDecoration(
+        labelText: "密码",
+        suffixIcon: IconButton(
+          icon: Icon(
+            Icons.remove_red_eye,
+            color: _eyeColor,
+          ),
+          onPressed: () {
+            // 修改 state 内部变量, 且需要界面内容更新, 需要使用 setState()
+            setState(() {
+              _isObscure = !_isObscure;
+              _eyeColor = (_isObscure
+                  ? Colors.grey
+                  : Theme.of(context).iconTheme.color)!;
+            });
+          },
+        )
+      )
+    );
   }
 
   Widget buildEmailTextField() {
     return TextFormField(
       decoration: const InputDecoration(labelText: '账号'),
       validator: (v) {
-        var emailReg = RegExp(
-            r"^[a-zA-Z0-9_-]{6,20}$");
+        var emailReg = RegExp(r"^[a-zA-Z0-9_-]{6,20}$");
         if (!emailReg.hasMatch(v!)) {
           return '请输入正确的免聊账号';
         }
@@ -234,23 +226,22 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
   Widget buildTitleLine() {
     return Padding(
-        padding: const EdgeInsets.only(left: 12.0, top: 4.0),
-        child: Align(
-          alignment: Alignment.bottomLeft,
-          child: Container(
-            color: Colors.black,
-            width: 40,
-            height: 2,
-          ),
-        ));
+      padding: const EdgeInsets.only(left: 12.0, top: 4.0),
+      child: Align(
+        alignment: Alignment.bottomLeft,
+        child: Container(
+          color: Colors.black,
+          width: 40,
+          height: 2,
+        ),
+      )
+    );
   }
 
   Widget buildTitle() {
     return const Padding(
-        padding: EdgeInsets.all(8),
-        child: Text(
-          '登录',
-          style: TextStyle(fontSize: 42),
-        ));
+      padding: EdgeInsets.all(8),
+      child: Text('登录', style: TextStyle(fontSize: 42))
+    );
   }
 }

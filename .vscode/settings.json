@@ -1,4 +1,8 @@
 {
   "cmake.sourceDirectory": "${workspaceFolder}/linux",
-  "cmake.configureOnOpen": true
+  "cmake.configureOnOpen": true,
+  "editor.tabSize": 2,
+  "editor.detectIndentation": true,
+  "editor.formatOnType": false,
+  "editor.formatOnSave": false
 }
