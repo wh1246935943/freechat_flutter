@@ -14,7 +14,7 @@ Dio dio = Dio(options);
 // CookieJar cookieJar= CookieJar();
 // dio.interceptors.add(CookieManager(cookieJar));
 
-Future<BaseResponse> httpRequest(url, params, {String method = 'GET', bool isMsg = true, String msg = ''}) async {
+Future<BaseResponse> httpRequest(url, {params, String method = 'GET', bool isMsg = true, String msg = ''}) async {
   Response response = await dio.request(
     url,
     data: params,

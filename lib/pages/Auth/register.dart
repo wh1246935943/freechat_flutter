@@ -1,32 +1,32 @@
-import 'package:dio/dio.dart';
-import 'package:dio/src/response.dart';
 import 'package:flutter/material.dart';
-// import 'package:path/path.dart';
-// import 'package:sqflite/sqflite.dart';
-import 'package:freechat/pages/Index/index.dart';
 import 'package:freechat/http/index.dart';
-import 'package:freechat/vo/login_vo.dart';
 
-import '../../utils/sp_cache.dart';
+Map<String, List<dynamic>> fields = {
+  'userName': ['用户名', RegExp(r"^[a-zA-Z0-9·&-_\\/]{1,30}$")],
+  'password': ['密码', RegExp(r"^[a-zA-Z0-9_-|,.<>]{4,16}$")],
+  'nickName': ['昵称', RegExp(r"^[\u4e00-\u9fa5a-zA-Z0-9·&-_\\/]{1,30}$")],
+  'phoneNumber': ['手机号', RegExp(r"^[1]([3][0-9]{1}|[5-9][0-9]{1})[0-9]{8}$")],
+  'email': ['邮箱', RegExp(r"^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")],
+  'region': ['地区', null],
+  // 'avatar': '',
+  'verCode': ['验证码', RegExp(r"^[0-9]{6}$")],
+};
 
-// import '../Store/IndexStore.dart';
-
-class Login extends StatefulWidget {
-  const Login({super.key});
+class Register extends StatefulWidget {
+  const Register({super.key});
 
   @override
-  State<StatefulWidget> createState() => _LoginState();
+  State<StatefulWidget> createState() => _RegisterState();
 }
 
-class _LoginState extends State<Login> with TickerProviderStateMixin {
+class _RegisterState extends State<Register> with TickerProviderStateMixin {
   final GlobalKey _formKey = GlobalKey<FormState>();
-  late String _userName = '', _password = '';
+  Map<String, String> submitInfo = Map();
   late AnimationController controller;
-  final TextEditingController _userNameInputController = TextEditingController();
   bool _isObscure = true;
   bool _loading = false;
+  bool _codeLoading = false;
   Color _eyeColor = Colors.grey;
-  LoginVo _loginVo = LoginVo();
 
   @override
   void initState() {
@@ -38,13 +38,6 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
       setState(() {});
     });
     controller.repeat(reverse: true);
-
-    setCacheUserName();
-  }
-
-  void setCacheUserName() async {
-    var cacheName = await SpCache.getString('cache_userName') ?? '';
-    _userNameInputController.text = cacheName;
   }
 
   @override
@@ -53,94 +46,90 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  void loginHandel(context) async {
-    _loginVo = LoginVo();
+  void registerHandel(context) async {
     setState(() => _loading = true);
     try {
-      var respJson = await httpRequest(
-        '/auth/login', {'userName': _userName, 'password': _password},
+      await httpRequest(
+        '/auth/register',
+        params: submitInfo,
         method: 'POST'
       );
-
-      // var data = await jsonDecode(respJson.toString());
-      _loginVo.token = respJson.data['token'];// LoginVo.fromJson(respJson);
-      _loginVo.id = respJson.data['id'];
     } catch (e) {};
     // 成功与否都关闭loading
     setState(() => _loading = false);
-    
-    // 用户信息获取成功进入系统
-    if (_loginVo.token != null) {
-      await SpCache.save('cache_userName', _userName);
-      await SpCache.save('cache_userId', _loginVo.id);
-      await SpCache.save('cache_token', _loginVo.token);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute<void>(builder: (context) => const Index())
-      );
-    }
+  }
+
+  void getVerCode() async {
+    setState(() => _codeLoading = true);
+    try {
+      await httpRequest('/auth/verCode?email=${submitInfo['email']}');
+    } catch (e) {};
+    // 成功与否都关闭loading
+    setState(() => _codeLoading = false);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 1,
+        centerTitle: true,
+        title: const Text('注册账号')
+      ),
       body: Form(
         key: _formKey, // 设置globalKey，用于后面获取FormStat
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           children: [
-            // 距离顶部一个工具栏的高度
-            const SizedBox(height: kToolbarHeight),
-            // Login
-            buildTitle(),
-            // Login下面的下划线
-            buildTitleLine(),
+            const SizedBox(height: 10),
+            // 用户名
+            buildEmailTextField('userName'),
+            // 密码
+            buildPasswordTextField('password', ctx: context),
+            // 确认密码
+            // buildPasswordTextField('userName', ctx: context),
+            // 用户昵称
+            buildEmailTextField('nickName'),
+            // 手机号
+            buildEmailTextField('phoneNumber'),
+            // 邮箱
+            buildEmailTextField('email'),
+            // 地区
+            buildEmailTextField('region'),
+            // 验证码
+            buildEmailTextField('verCode'),
+            // 获取验证码
             const SizedBox(height: 60),
-            // 输入邮箱
-            buildEmailTextField(),
-            const SizedBox(height: 30),
-            // 输入密码
-            buildPasswordTextField(context),
-            // 忘记密码
-            buildForgetPasswordText(context),
-            const SizedBox(height: 60),
+            getVerCodeText(),
             // 登录按钮
-            buildLoginButton(context),
-            const SizedBox(height: 40),
-            // 注册账号文本按钮
-            buildRegisterText(context),
-            // 加载动画
+            const SizedBox(height: 60),
+            buildRegisterButton(context),
           ]
         )
       )
     );
   }
 
-  Widget buildRegisterText(context) {
+  Widget getVerCodeText() {
     return Center(
       child: Padding(
         padding: const EdgeInsets.only(top: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('没有账号?'),
-            GestureDetector(
-              child: const Text(
-                '注册账号',
-                style: TextStyle(color: Colors.green)
-              ),
-              onTap: () {
-                // loginHandel(context);
-              },
-            )
-          ],
+        child: GestureDetector(
+          child: Text(
+            '获取验证码',
+            style: TextStyle(color: _codeLoading ? Colors.grey : Colors.green)
+          ),
+          onTap: () {
+            if (_codeLoading) return;
+            getVerCode();
+          },
         ),
       ),
     );
   }
 
-  Widget buildLoginButton(BuildContext context) {
+  Widget buildRegisterButton(BuildContext context) {
     return Align(
       child: SizedBox(
         height: 45,
@@ -164,7 +153,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
             // 表单校验通过才会继续执行
             if ((_formKey.currentState as FormState).validate()) {
               (_formKey.currentState as FormState).save();
-              loginHandel(context);
+              registerHandel(context);
             }
           },
         ),
@@ -172,30 +161,32 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     );
   }
 
-  Widget buildForgetPasswordText(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: Align(
-        alignment: Alignment.centerRight,
-        child: TextButton(
-          onPressed: () {
-            // Navigator.pop(context);
-            print("忘记密码");
-          },
-          child: const Text("忘记密码？",
-              style: TextStyle(fontSize: 14, color: Colors.grey)),
-        ),
-      ),
+  Widget buildEmailTextField(String field) {
+    var desc = fields[field]![0];
+    var reg = fields[field]![1];
+    return TextFormField(
+      decoration: InputDecoration(labelText: desc),
+      validator: (v) {
+        if (reg != null && !reg.hasMatch(v!)) {
+          return '$desc格式错误';
+        }
+        return null;
+      },
+      onChanged: (v) {
+        setState(() => submitInfo[field] = v);
+      },
     );
   }
 
-  Widget buildPasswordTextField(BuildContext context) {
+  Widget buildPasswordTextField(String field, {required BuildContext ctx}) {
     return TextFormField(
       obscureText: _isObscure, // 是否显示文字
-      onSaved: (v) => _password = v!,
+      onChanged: (v) {
+        setState(() => submitInfo['password'] = v!);
+      },
       validator: (v) {
         if (v!.isEmpty) {
-          return '请输入密码';
+          return '密码格式错误';
         }
       },
       decoration: InputDecoration(
@@ -211,46 +202,11 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
               _isObscure = !_isObscure;
               _eyeColor = (_isObscure
                   ? Colors.grey
-                  : Theme.of(context).iconTheme.color)!;
+                  : Theme.of(ctx).iconTheme.color)!;
             });
           },
         )
       )
-    );
-  }
-
-  Widget buildEmailTextField() {
-    return TextFormField(
-      controller: _userNameInputController,
-      decoration: const InputDecoration(labelText: '账号'),
-      validator: (v) {
-        var emailReg = RegExp(r"^[a-zA-Z0-9_-]{6,20}$");
-        if (!emailReg.hasMatch(v!)) {
-          return '请输入正确的免聊账号';
-        }
-      },
-      onSaved: (v) => _userName = v!,
-    );
-  }
-
-  Widget buildTitleLine() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 12.0, top: 4.0),
-      child: Align(
-        alignment: Alignment.bottomLeft,
-        child: Container(
-          color: Colors.black,
-          width: 40,
-          height: 2,
-        ),
-      )
-    );
-  }
-
-  Widget buildTitle() {
-    return const Padding(
-      padding: EdgeInsets.all(8),
-      child: Text('登录', style: TextStyle(fontSize: 42))
     );
   }
 }

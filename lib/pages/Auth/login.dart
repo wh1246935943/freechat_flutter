@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:dio/src/response.dart';
 import 'package:flutter/material.dart';
+import 'package:freechat/pages/Auth/register.dart';
 // import 'package:path/path.dart';
 // import 'package:sqflite/sqflite.dart';
 import 'package:freechat/pages/Index/index.dart';
@@ -58,7 +59,8 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
     setState(() => _loading = true);
     try {
       var respJson = await httpRequest(
-        '/auth/login', {'userName': _userName, 'password': _password},
+        '/auth/login', 
+        params: {'userName': _userName, 'password': _password},
         method: 'POST'
       );
 
@@ -79,6 +81,15 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
         MaterialPageRoute<void>(builder: (context) => const Index())
       );
     }
+  }
+
+  /// 注册账号
+  void registerUser() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (context) => const Register()
+      )
+    );
   }
 
   @override
@@ -131,7 +142,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                 style: TextStyle(color: Colors.green)
               ),
               onTap: () {
-                // loginHandel(context);
+                registerUser();
               },
             )
           ],
