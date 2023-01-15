@@ -3,6 +3,8 @@ import 'package:freechat/pages/Auth/login.dart';
 import 'package:freechat/utils/dd_toast.dart';
 import 'package:path/path.dart';
 
+import '../../utils/sp_cache.dart';
+
 class My extends StatefulWidget {
   const My({super.key});
 
@@ -122,7 +124,8 @@ class _MyState extends State<My> {
             ),
             TextButton(
                 onPressed: () {
-                  // 表单校验通过才会继续执行
+                  SpCache.remove('cache_userId');
+                  SpCache.remove('cache_token');
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute<void>(

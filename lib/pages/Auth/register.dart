@@ -159,7 +159,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
               strokeWidth: 2,
               color: Color.fromARGB(255, 255, 255, 255),
             )
-          )) : Text('登录', style: Theme.of(context).primaryTextTheme.headline5),
+          )) : Text('注册', style: Theme.of(context).primaryTextTheme.headline5),
           onPressed: () {
             // 表单校验通过才会继续执行
             if ((_formKey.currentState as FormState).validate()) {

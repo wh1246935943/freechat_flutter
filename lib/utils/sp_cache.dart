@@ -16,6 +16,7 @@ class SpCache {
 
   /// 清除数据
   static void remove(String key) async {
+    _sharedPreferences = await SharedPreferences.getInstance();
     if (_sharedPreferences.containsKey(key)) {
       _sharedPreferences.remove(key);
     }
@@ -23,6 +24,7 @@ class SpCache {
 
   /// 异步保存基本数据类型
   static Future save(String key, dynamic value) async {
+    _sharedPreferences = await SharedPreferences.getInstance();
     if (value is String) {
       _sharedPreferences.setString(key, value);
     } else if (value is bool) {
@@ -38,23 +40,28 @@ class SpCache {
 
   /// 异步读取
   static Future<String?> getString(String key) async {
+    _sharedPreferences = await SharedPreferences.getInstance();
     return _sharedPreferences.getString(key);
   }
 
   static Future<int?> getInt(String key) async {
+    _sharedPreferences = await SharedPreferences.getInstance();
     return _sharedPreferences.getInt(key);
   }
 
   static Future<bool?> getBool(String key) async {
+    _sharedPreferences = await SharedPreferences.getInstance();
     return _sharedPreferences.getBool(key);
   }
 
   static Future<double?> getDouble(String key) async {
+    _sharedPreferences = await SharedPreferences.getInstance();
     return _sharedPreferences.getDouble(key);
   }
 
   /// 保存自定义对象
   static Future saveObject(String key, dynamic value) async {
+    _sharedPreferences = await SharedPreferences.getInstance();
     /// 通过 json 将Object对象编译成String类型保存
     _sharedPreferences.setString(key, json.encode(value));
   }
