@@ -1,8 +1,10 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:freechat/pages/common/dd_image/dd_image.dart';
 import 'package:freechat/utils/auth_util.dart';
 import 'package:freechat/utils/dd_toast.dart';
 import 'package:file_picker/file_picker.dart';
+import '../../http/index.dart';
 import '../../utils/sp_cache.dart';
 import '../../vo/user_info_vo.dart';
 
@@ -103,13 +105,23 @@ class _MyState extends State<My> {
           trailing: const Icon(Icons.arrow_right),
           onTap: () async {
             // DDToast.info(name);
-            FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: true);
-            if (result != null) {
-              var files = result.paths.map((path) => path).toList();
-            } else {
-              // User canceled the picker
-            }
-            print(123);
+            var paths = (await FilePicker.platform.pickFiles(
+              type: FileType.any,
+              allowMultiple: false,
+              // onFileLoading: (FilePickerStatus status) => print(status),
+            ))?.files;
+
+            var path = paths?[0].path;
+            var name = paths?[0].name;
+            if (path == null) return;
+
+            var formData = FormData.fromMap({
+              'file': await MultipartFile.fromFile(path, filename: name)
+            });
+
+            var respJson = await httpRequest('/user/avatar', method: 'post', params: formData);
+
+            print(11111);
           },
         ));
       }

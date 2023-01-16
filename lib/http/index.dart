@@ -28,6 +28,14 @@ Future<BaseResponse> httpRequest(url, {params, String method = 'GET', bool isMsg
     data: params,
     options: Options(method: method),
   );
+
+  DDToast.error('${response.statusCode}');
+
+  if (response.statusCode != 200) {
+    DDToast.error(response.statusCode.toString());
+    throw Exception('操作异常');
+  }
+
   /// 解析公共的返回数据
   BaseResponse responseData = BaseResponse.fromJson(response.data);
   int errorCode = responseData.code ?? -1;
@@ -45,7 +53,7 @@ Future<BaseResponse> httpRequest(url, {params, String method = 'GET', bool isMsg
   }
 
   if (isMsg) {
-    DDToast.info(emsg);
+    // DDToast.info(emsg);
   }
 
   return responseData;
