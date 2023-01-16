@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:freechat/pages/Auth/login.dart';
 import 'package:freechat/pages/common/dd_image/dd_image.dart';
 import 'package:freechat/utils/auth_util.dart';
 import 'package:freechat/utils/dd_toast.dart';
+import 'package:file_picker/file_picker.dart';
 import '../../utils/sp_cache.dart';
 import '../../vo/user_info_vo.dart';
 
@@ -101,8 +101,15 @@ class _MyState extends State<My> {
           ),
           title: Text(name),
           trailing: const Icon(Icons.arrow_right),
-          onTap: () {
-            DDToast.info(name);
+          onTap: () async {
+            // DDToast.info(name);
+            FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: true);
+            if (result != null) {
+              var files = result.paths.map((path) => path).toList();
+            } else {
+              // User canceled the picker
+            }
+            print(123);
           },
         ));
       }

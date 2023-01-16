@@ -25,6 +25,8 @@ dependencies:
   shared_preferences: ^2.0.15
   cookie_jar: ^3.0.1
   path_provider: ^2.0.11
+  wechat_assets_picker: ^8.3.1+1
+  file_picker: ^5.2.5
 
 dev_dependencies:
   flutter_test:
