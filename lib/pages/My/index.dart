@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:freechat/pages/Auth/login.dart';
 import 'package:freechat/utils/dd_toast.dart';
-import 'package:path/path.dart';
 
+import '../../http/index.dart';
 import '../../utils/sp_cache.dart';
+import '../../vo/user_info_vo.dart';
 
 class My extends StatefulWidget {
   const My({super.key});
@@ -14,6 +15,21 @@ class My extends StatefulWidget {
 
 class _MyState extends State<My> {
   final List<String> funs = <String>['收藏', '朋友圈', '视频号', '设置'];
+  UserInfoVo _userInfoVo = UserInfoVo();
+
+  @override
+  void initState() {
+    getUserInfo();
+    super.initState();
+  }
+
+  void getUserInfo() async {
+    var respJson = await httpRequest('/user/info');
+
+    setState(() {
+      _userInfoVo = UserInfoVo.fromJson(respJson.data);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,29 +43,40 @@ class _MyState extends State<My> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Image(
+                  Image.network(
+                    _userInfoVo.avatar ?? '',
                     width: 100,
                     height: 100,
                     fit: BoxFit.cover,
-                    image: NetworkImage(
-                        'https://t7.baidu.com/it/u=1595072465,3644073269&fm=193&f=GIF'),
+                    errorBuilder: (_, __, ___) => Image.asset(
+                      'lib/assets/default_avatar.jpg',
+                      height: 100,
+                      width: 100)
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Padding(
-                        padding: EdgeInsets.only(left: 10),
-                        child: Text("豆豆",
-                            style: TextStyle(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Text(_userInfoVo.nickName ?? '',
+                            style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 30,
                                 fontWeight: FontWeight.bold)),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: 10, top: 20),
-                        child: Text("免聊号: ${"我是豆豆"}",
-                            style: TextStyle(
+                        padding: const EdgeInsets.only(left: 10, top: 10),
+                        child: Text("免聊号: ${_userInfoVo.userName ?? ''}",
+                            style: const TextStyle(
+                                color: Color.fromARGB(255, 128, 128, 128),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10, top: 10),
+                        child: Text("个性签名: ${_userInfoVo.personalitySign ?? ''}",
+                            style: const TextStyle(
                                 color: Color.fromARGB(255, 128, 128, 128),
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600)),
@@ -75,12 +102,16 @@ class _MyState extends State<My> {
           String name = funs[index];
           return (ListTile(
             contentPadding: EdgeInsets.zero,
-            leading: const Image(
+            leading: Image.network(
+              _userInfoVo.avatar ?? '',
               width: 40,
               height: 40,
               fit: BoxFit.cover,
-              image: NetworkImage(
-                  'https://img0.baidu.com/it/u=2900833435,993445529&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500'),
+              errorBuilder: (_, __, ___) => Image.asset(
+                'lib/assets/default_avatar.jpg',
+                height: 40,
+                width: 40
+              )
             ),
             title: Text(name),
             trailing: const Icon(Icons.arrow_right),

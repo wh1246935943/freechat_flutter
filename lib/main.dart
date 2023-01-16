@@ -4,12 +4,12 @@ import 'package:freechat/pages/Auth/login.dart';
 import 'package:freechat/utils/sp_cache.dart';
 
 import 'package:provider/provider.dart';
-import 'package:freechat/Store/IndexStore.dart';
+import 'package:freechat/Store/index_store.dart';
 
 // 这里为入口函数
 void main() => runApp(MultiProvider(
   providers: [ChangeNotifierProvider(create: (context) => IndexStore())],
-  child: App(),
+  child: const App(),
 ));
 
 class App extends StatefulWidget {

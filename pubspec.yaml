@@ -23,6 +23,8 @@ dependencies:
   another_flushbar: ^1.12.29
   dio_cookie_manager: ^2.0.0
   shared_preferences: ^2.0.15
+  cookie_jar: ^3.0.1
+  path_provider: ^2.0.11
 
 dev_dependencies:
   flutter_test:
@@ -34,4 +36,4 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - lib/assets/
+    - lib/assets/default_avatar.jpg
