@@ -1,9 +1,5 @@
-import 'package:dio/dio.dart';
-import 'package:dio/src/response.dart';
 import 'package:flutter/material.dart';
 import 'package:freechat/pages/Auth/register.dart';
-// import 'package:path/path.dart';
-// import 'package:sqflite/sqflite.dart';
 import 'package:freechat/pages/Index/index.dart';
 import 'package:freechat/http/index.dart';
 import 'package:freechat/vo/login_vo.dart';
@@ -64,23 +60,21 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
         method: 'POST'
       );
 
-      // var data = await jsonDecode(respJson.toString());
-      _loginVo.token = respJson.data['token'];// LoginVo.fromJson(respJson);
-      _loginVo.id = respJson.data['id'];
+      setState(() => _loginVo = LoginVo.fromJson(respJson.data));
+
+      // 用户信息获取成功进入系统
+      if (_loginVo.token != null) {
+        await SpCache.save('cache_userName', _userName);
+        await SpCache.save('cache_userId', _loginVo.id);
+        await SpCache.save('cache_token', _loginVo.token);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute<void>(builder: (context) => const Index())
+        );
+      }
     } catch (e) {};
     // 成功与否都关闭loading
     setState(() => _loading = false);
-    
-    // 用户信息获取成功进入系统
-    if (_loginVo.token != null) {
-      await SpCache.save('cache_userName', _userName);
-      await SpCache.save('cache_userId', _loginVo.id);
-      await SpCache.save('cache_token', _loginVo.token);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute<void>(builder: (context) => const Index())
-      );
-    }
   }
 
   /// 注册账号

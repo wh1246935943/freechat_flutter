@@ -3,6 +3,9 @@ import 'package:freechat/pages/Chat/index.dart';
 import 'package:freechat/pages/My/index.dart';
 import 'package:freechat/pages/Find/index.dart';
 import 'package:freechat/pages/Contacts/index.dart';
+import '../../http/index.dart';
+import '../../utils/sp_cache.dart';
+import '../../vo/user_info_vo.dart';
 import 'navigation_icon_view.dart';
 
 class Index extends StatefulWidget {
@@ -31,6 +34,21 @@ class _IndexState extends State<Index> with TickerProviderStateMixin {
   ];
 
   final PageStorageBucket _bucket = PageStorageBucket();
+
+  @override
+  void initState() {
+    super.initState();
+    var context = this.context;
+    getUserInfo(context);
+  }
+
+  void getUserInfo(BuildContext context) async {
+    var respJson = await httpRequest('/user/info');
+
+    UserInfoVo userInfoVo = UserInfoVo.fromJson(respJson.data);
+
+    SpCache.saveObject('user_info_vo', userInfoVo);
+  }
 
   @override
   Widget build(BuildContext context) {

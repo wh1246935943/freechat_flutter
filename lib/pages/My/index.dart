@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:freechat/pages/Auth/login.dart';
+import 'package:freechat/pages/common/dd_image/dd_image.dart';
+import 'package:freechat/utils/auth_util.dart';
 import 'package:freechat/utils/dd_toast.dart';
-
-import '../../http/index.dart';
 import '../../utils/sp_cache.dart';
 import '../../vo/user_info_vo.dart';
 
@@ -24,11 +24,8 @@ class _MyState extends State<My> {
   }
 
   void getUserInfo() async {
-    var respJson = await httpRequest('/user/info');
-
-    setState(() {
-      _userInfoVo = UserInfoVo.fromJson(respJson.data);
-    });
+    var respString = SpCache.getObject('user_info_vo');
+    setState(() => _userInfoVo = UserInfoVo.fromJson(respString));
   }
 
   @override
@@ -43,15 +40,10 @@ class _MyState extends State<My> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.network(
-                    _userInfoVo.avatar ?? '',
+                  DDImage(
+                    url: _userInfoVo.avatar ?? '',
                     width: 100,
                     height: 100,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Image.asset(
-                      'lib/assets/default_avatar.jpg',
-                      height: 100,
-                      width: 100)
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -96,30 +88,25 @@ class _MyState extends State<My> {
 
   Widget _buildFunsList() {
     return ListView.builder(
-        shrinkWrap: true,
-        itemCount: funs.length,
-        itemBuilder: (BuildContext context, int index) {
-          String name = funs[index];
-          return (ListTile(
-            contentPadding: EdgeInsets.zero,
-            leading: Image.network(
-              _userInfoVo.avatar ?? '',
-              width: 40,
-              height: 40,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Image.asset(
-                'lib/assets/default_avatar.jpg',
-                height: 40,
-                width: 40
-              )
-            ),
-            title: Text(name),
-            trailing: const Icon(Icons.arrow_right),
-            onTap: () {
-              DDToast.info(name);
-            },
-          ));
-        });
+      shrinkWrap: true,
+      itemCount: funs.length,
+      itemBuilder: (BuildContext context, int index) {
+        String name = funs[index];
+        return (ListTile(
+          contentPadding: EdgeInsets.zero,
+          leading: DDImage(
+            url: _userInfoVo.avatar ?? '',
+            width: 40,
+            height: 40,
+          ),
+          title: Text(name),
+          trailing: const Icon(Icons.arrow_right),
+          onTap: () {
+            DDToast.info(name);
+          },
+        ));
+      }
+    );
   }
 
   Widget _buildLoginout(BuildContext context) {
@@ -154,15 +141,11 @@ class _MyState extends State<My> {
               child: const Text("取消"),
             ),
             TextButton(
-                onPressed: () {
-                  SpCache.remove('cache_userId');
-                  SpCache.remove('cache_token');
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute<void>(
-                          builder: (context) => const Login()));
-                },
-                child: const Text("确定"))
+              onPressed: () {
+                AuthUtil.loginOut(context);
+              },
+              child: const Text("确定")
+            )
           ],
         );
       },

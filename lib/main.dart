@@ -22,6 +22,8 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
 
   bool isLogin = false;
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 
   @override
   void initState() {
@@ -37,6 +39,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       home: Scaffold(body: isLogin ? const Index() : const Login()),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

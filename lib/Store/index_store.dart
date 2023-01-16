@@ -1,13 +1,14 @@
 import 'package:flutter/cupertino.dart';
+import 'package:freechat/vo/user_info_vo.dart';
 
 class IndexStore extends Object with ChangeNotifier{
 
-  bool _loginState = false;
+  UserInfoVo _userInfo = UserInfoVo();
 
-  get loginState => _loginState;
+  get userInfo => _userInfo;
 
-  void set(){
-    _loginState = !_loginState;
+  void set(info){
+    _userInfo = info;
     notifyListeners();//通知所有的观察者
   }
 }
