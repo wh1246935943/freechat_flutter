@@ -169,9 +169,13 @@ class _CircleFriendState extends State<CircleFriend> {
       children: [
         Container(
           margin: const EdgeInsets.only(bottom: 20),
-          child: const DDImage(
-            url: 'lib/assets/friends/circle_friend_bg.jpg',
-            isNet: false
+          // child: const DDImage(
+          //   url: 'lib/assets/friends/circle_friend_bg.jpg',
+          //   isNet: false
+          // )
+          child: Image.asset(
+            'lib/assets/friends/circle_friend_bg.jpg',
+            fit: BoxFit.cover,
           )
         ),
         Positioned(
