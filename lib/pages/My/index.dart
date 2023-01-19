@@ -15,7 +15,6 @@ class My extends StatefulWidget {
 }
 
 class _MyState extends State<My> {
-  // final List<String> funs = ['朋友圈', '收藏', '视频号', '设置'];
   final List<List<String>> funs = [
     ["朋友圈", 'lib/assets/ic_social_circle.png'],
     ["收藏", 'lib/assets/ic_collections.png'],
@@ -63,7 +62,7 @@ class _MyState extends State<My> {
                           .of(context)
                           .push(MaterialPageRoute(
                             builder: (context) => ImgPreview(
-                              imgDataArr: [_userInfoVo.avatar ?? '']
+                              imgDataArr: [_userInfoVo.avatar]
                             ))
                           );
                       },

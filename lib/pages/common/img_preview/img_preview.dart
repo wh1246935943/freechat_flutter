@@ -1,8 +1,3 @@
-///  jh_photo_browser.dart
-///
-///  Created by iotjin on 2020/09/16.
-///  description:  图片全屏浏览器
-
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';

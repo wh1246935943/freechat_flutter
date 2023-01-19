@@ -22,6 +22,11 @@ class SpCache {
     }
   }
 
+  static Future<bool>? clear() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    return _sharedPreferences.clear();
+  }
+
   /// 异步保存基本数据类型
   static Future save(String key, dynamic value) async {
     _sharedPreferences = await SharedPreferences.getInstance();

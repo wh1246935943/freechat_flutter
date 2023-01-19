@@ -1,0 +1,98 @@
+{
+  "code": 200,
+  "suc": true,
+  "msg": "",
+  "data": [
+    {
+      "id": 0,
+      "name": "王浩",
+      "color": "#8279f2",
+      "content": "过年了，感觉不错！",
+      "time": "刚刚",
+      "images": [
+        "lib/assets/friends/img10.jpg"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "豆豆",
+      "color": "#93f279",
+      "content": "看美女！",
+      "time": "5分钟前",
+      "images": [
+        "lib/assets/friends/img1.jpg",
+        "lib/assets/friends/img2.jpg",
+        "lib/assets/friends/img3.jpg",
+        "lib/assets/friends/img4.jpg",
+        "lib/assets/friends/img5.jpg",
+        "lib/assets/friends/img6.jpg",
+        "lib/assets/friends/img7.jpg",
+        "lib/assets/friends/img8.jpg",
+        "lib/assets/friends/img9.jpg"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "豆豆",
+      "color": "#f279b6",
+      "content": "下班走人。",
+      "time": "1小时前",
+      "images": [
+        "lib/assets/friends/wx_img2.JPG",
+        "lib/assets/friends/wx_img3.JPG",
+        "lib/assets/friends/wx_img4.JPG",
+        "lib/assets/friends/wx_img5.JPG"
+      ]
+    },
+    {
+      "id": 18,
+      "name": "我党",
+      "color": "#dc79f2",
+      "content": "我来告诉你什么叫 都是我的。",
+      "time": "2天前",
+      "images": [
+        "lib/assets/friends/wx_img11.JPG",
+        "lib/assets/friends/wx_img12.JPG",
+        "lib/assets/friends/wx_img13.JPG",
+        "lib/assets/friends/wx_img14.JPG",
+        "lib/assets/friends/wx_img15.JPG",
+        "lib/assets/friends/wx_img16.JPG"
+      ]
+    },
+    {
+      "id": 30,
+      "name": "小强",
+      "color": "#cbf279",
+      "content": "这是个大牛。",
+      "time": "5个月前",
+      "images": [
+        "lib/assets/friends/wx_img12.JPG",
+        "lib/assets/friends/wx_img13.JPG",
+        "lib/assets/friends/wx_img14.JPG",
+        "lib/assets/friends/wx_img15.JPG",
+        "lib/assets/friends/wx_img16.JPG",
+        "lib/assets/friends/wx_img17.JPG",
+        "lib/assets/friends/wx_img18.JPG",
+        "lib/assets/friends/wx_img19.JPG",
+        "lib/assets/friends/wx_img20.JPG"
+      ]
+    },
+    {
+      "id": 36,
+      "name": "豆豆",
+      "color": "#f279ad",
+      "content": "看看世界吧。",
+      "time": "3年前",
+      "images": [
+        "lib/assets/friends/image2.jpeg",
+        "lib/assets/friends/image3.jpeg",
+        "lib/assets/friends/image4.jpeg",
+        "lib/assets/friends/image5.jpeg",
+        "lib/assets/friends/image6.jpeg",
+        "lib/assets/friends/image7.jpeg",
+        "lib/assets/friends/image8.jpeg",
+        "lib/assets/friends/image9.jpeg"
+      ]
+    }
+  ]
+}

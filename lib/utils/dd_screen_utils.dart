@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class JhScreenUtils {
+class DDScreenUtils {
   static init(BuildContext context) {
     // 假如设计稿是按iPhone6的尺寸设计的(iPhone6 750*1334)
     ScreenUtil.init(context, designSize: const Size(750, 1334));
