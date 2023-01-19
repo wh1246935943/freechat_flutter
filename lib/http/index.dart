@@ -39,7 +39,7 @@ Future<BaseResponse> httpRequest(url, {params, String method = 'GET', bool isMsg
   /// 解析公共的返回数据
   BaseResponse responseData = BaseResponse.fromJson(response.data);
   int errorCode = responseData.code ?? -1;
-  String errorMessage = responseData.message ?? '出现了一个异常，但这不是你设备或网络的问题';
+  String errorMessage = responseData.message ?? '出现了一个异常，但这不是你的问题';
 
   String emsg = "$errorCode: $errorMessage";
   if (msg != '') {

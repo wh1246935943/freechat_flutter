@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:freechat/pages/common/dd_image/dd_image.dart';
+import 'package:freechat/vo/user_info_vo.dart';
+import '../../utils/sp_cache.dart';
 import './../../config/project_config.dart';
 import 'circle_friends_cell.dart';
 import './../../vo/wx_friends_circle_model.dart';
@@ -24,6 +27,7 @@ class _CircleFriendState extends State<CircleFriend> {
   double _scrollMinOffSet = 0;
   double _navH = 0;
   double _appbarOpacity = 0.0;
+  UserInfoVo _userInfoVo = UserInfoVo();
 
   var _dataArr = [];
 
@@ -34,7 +38,13 @@ class _CircleFriendState extends State<CircleFriend> {
     _scrollMinOffSet = _imgNormalHeight - _navH;
     _loadData();
     _addListener();
+    _getUserInfo();
     super.initState();
+  }
+
+  void _getUserInfo() async {
+    var respString = SpCache.getObject('user_info_vo');
+    setState(() => _userInfoVo = UserInfoVo.fromJson(respString));
   }
 
   void _loadData() async {
@@ -143,7 +153,7 @@ class _CircleFriendState extends State<CircleFriend> {
             '朋友圈',
             bgColor: navBgColor,
             brightness: _appbarOpacity == 1.0 ? Brightness.light : Brightness.dark,
-            rightImgPath: 'lib/assets/ic_xiangji.png',
+            rightImgPath: 'lib/assets/icon_xiangji.png',
             rightItemCallBack: () {
               _clickNav();
             },
@@ -159,14 +169,10 @@ class _CircleFriendState extends State<CircleFriend> {
       children: [
         Container(
           margin: const EdgeInsets.only(bottom: 20),
-          // child: Image.network(
-          //   'http://img1.mukewang.com/5c18cf540001ac8206000338.jpg',
-          //   fit: BoxFit.cover,
-          // ),
-          child: Image.asset(
-            'lib/assets/lufei.png',
-            fit: BoxFit.cover,
-          ),
+          child: const DDImage(
+            url: 'lib/assets/friends/circle_friend_bg.jpg',
+            isNet: false
+          )
         ),
         Positioned(
           right: 20,
@@ -175,9 +181,9 @@ class _CircleFriendState extends State<CircleFriend> {
             children: [
               Container(
                 margin: const EdgeInsets.only(bottom: 10),
-                child: const Text(
-                  '小于',
-                  style: TextStyle(color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.w500),
+                child: Text(
+                  _userInfoVo.nickName ?? '',
+                  style: const TextStyle(color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.w500),
                 ),
               ),
               const SizedBox(width: 20),
@@ -187,9 +193,9 @@ class _CircleFriendState extends State<CircleFriend> {
                   width: 75,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    image: const DecorationImage(
+                    image: DecorationImage(
                       fit: BoxFit.fitHeight,
-                      image: AssetImage('lib/assets/lufei.png'),
+                      image: NetworkImage(_userInfoVo.avatar ?? '')
                     ),
                   ),
                 ),
